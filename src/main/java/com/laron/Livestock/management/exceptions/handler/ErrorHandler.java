@@ -38,7 +38,7 @@ public class ErrorHandler {
     @ExceptionHandler(CustomFieldException.class )
     public ResponseEntity<AppResponse<?>> customField(CustomFieldException ex){
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
 
                 AppResponse.builder()
                         .errors(

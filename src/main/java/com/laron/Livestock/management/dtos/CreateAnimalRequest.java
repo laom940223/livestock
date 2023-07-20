@@ -40,4 +40,9 @@ public class CreateAnimalRequest {
 
     @NotNull
     private Long breed_id;
+
+
+
+    private Long father_id;
+    private Long mother_id;
 }

@@ -1,6 +1,7 @@
 package com.laron.Livestock.management.service;
 
 import com.laron.Livestock.management.dtos.CreateAnimalRequest;
+import com.laron.Livestock.management.dtos.SonsResponse;
 import com.laron.Livestock.management.entities.AnimalEntity;
 import com.laron.Livestock.management.entities.EAnimalSex;
 import com.laron.Livestock.management.exceptions.CustomFieldException;
@@ -15,6 +16,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -51,8 +53,20 @@ public class AnimalServiceImp implements AnimalService{
                 .orElseThrow( ()-> new CustomFieldException("Error", new AppError("breed_id", "The breed you provide does not exist")));
 
 
+        AnimalEntity father = null;
+        AnimalEntity mother = null;
 
+        if(Objects.nonNull( animal.getFather_id()) ){
+            father = animalRepo.findById(animal.getFather_id())
+                    .orElseThrow(()-> new CustomFieldException("Error", new AppError("father_id", "The father you provide does not exist")));
+            if(father.getSex()  == EAnimalSex.FEMALE) throw new CustomFieldException("Error", new AppError("father_id", "You can not add a cow as a father"));
+        }
 
+        if(Objects.nonNull( animal.getMother_id()) ){
+            mother = animalRepo.findById(animal.getFather_id())
+                    .orElseThrow(()-> new CustomFieldException("Error", new AppError("father_id", "The father you provide does not exist")));
+            if(mother.getSex()  == EAnimalSex.MALE) throw new CustomFieldException("Error", new AppError("mother_id", "You can not add a bull as a mother"));
+        }
 
 
         AnimalEntity animalToSave = AnimalEntity.builder()
@@ -61,6 +75,8 @@ public class AnimalServiceImp implements AnimalService{
                 .dob(LocalDate.parse(animal.getDob()))
                 .sex(EAnimalSex.valueOf(animal.getSex()))
                 .isInFarm(true)
+                .father(father)
+                .mother(mother)
                 .build();
 
 
@@ -78,6 +94,23 @@ public class AnimalServiceImp implements AnimalService{
         animalRepo.deleteById(id);
 
         return "Animal deleted successfully";
+
+    }
+
+    @Override
+    public List<AnimalEntity> getAnimalSons(Long id) {
+
+
+            var parent = animalRepo.findById(id).orElseThrow(()-> new ResourceNotFound("The parent that you provide does not exist"));
+
+            if(parent.getSex()== EAnimalSex.MALE){
+
+                return animalRepo.getFatherSons(id);
+            }
+
+
+            return null;
+
 
     }
 }

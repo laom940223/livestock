@@ -1,6 +1,7 @@
 package com.laron.Livestock.management.service;
 
 import com.laron.Livestock.management.dtos.CreateAnimalRequest;
+import com.laron.Livestock.management.dtos.SonsResponse;
 import com.laron.Livestock.management.entities.AnimalEntity;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface AnimalService {
     public AnimalEntity createAnimal(CreateAnimalRequest animal);
 
     public String  deleteAnimal(Long id);
+
+    public List<AnimalEntity> getAnimalSons(Long id);
 }

@@ -67,8 +67,6 @@ public class AnimalController {
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<AppResponse<?>> deleteAnimal( @PathVariable Long id){
 
-
-
         return ResponseEntity.ok(
                 AppResponse.builder()
                         .data(
@@ -76,6 +74,22 @@ public class AnimalController {
                         )
                         .build()
         );
+    }
+
+
+    @GetMapping(path = "/{id}/sons")
+    public ResponseEntity<AppResponse<?>> getSons(@PathVariable Long id){
+
+
+        return ResponseEntity.ok(
+                AppResponse.builder()
+                        .data( animalService.getAnimalSons(id))
+
+                        .build()
+
+        );
+
+
     }
 
 }
