@@ -21,15 +21,13 @@ public class AnimalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Size(min = 4, max = 60, message = "Provide a name between 4 and 60 characters")
     @NotBlank
     @Column( nullable = false)
     private String name;
 
 
-    @Column
-    @NotBlank
+
     private LocalDate dob;
 
 
@@ -40,10 +38,9 @@ public class AnimalEntity {
     @Column(columnDefinition = "boolean default true")
     private boolean isInFarm;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn( name="breed_id")
 
-
-   @ManyToOne(fetch = FetchType.EAGER)
-   @JoinColumn( name="breed_id")
    private BreedEntity breed;
 
 
