@@ -65,8 +65,7 @@ public class AnimalEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn( name="breed_id")
-
-   private BreedEntity breed;
+    private BreedEntity breed;
 
 
 }

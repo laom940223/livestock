@@ -22,6 +22,7 @@ public class SonsResponse {
     private String breed;
 
     private LocalDate dob;
+
     private Boolean inFarm;
 
 }
