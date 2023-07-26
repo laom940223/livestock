@@ -84,7 +84,6 @@ public class AnimalController {
         return ResponseEntity.ok(
                 AppResponse.builder()
                         .data( animalService.getAnimalSons(id))
-
                         .build()
 
         );

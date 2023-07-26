@@ -98,18 +98,37 @@ public class AnimalServiceImp implements AnimalService{
     }
 
     @Override
-    public List<AnimalEntity> getAnimalSons(Long id) {
+    public List<SonsResponse> getAnimalSons(Long id) {
 
 
             var parent = animalRepo.findById(id).orElseThrow(()-> new ResourceNotFound("The parent that you provide does not exist"));
 
             if(parent.getSex()== EAnimalSex.MALE){
 
-                return animalRepo.getFatherSons(id);
+                return animalRepo.getFatherSons(id).stream().map(
+                        son -> SonsResponse.builder()
+                                .id(son.getId())
+                                .name(son.getName())
+                                .breed(son.getBreed().getName())
+                                .inFarm(son.isInFarm())
+                                .dob(son.getDob())
+                                .build()
+
+                ).collect(Collectors.toList());
+
             }
 
 
-            return null;
+            return animalRepo.getMotherSons(id).stream().map(
+                    son -> SonsResponse.builder()
+                            .id(son.getId())
+                            .name(son.getName())
+                            .breed(son.getBreed().getName())
+                            .inFarm(son.isInFarm())
+                            .dob(son.getDob())
+                            .build()
+
+            ).collect(Collectors.toList());
 
 
     }

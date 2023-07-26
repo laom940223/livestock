@@ -15,5 +15,5 @@ public interface AnimalService {
 
     public String  deleteAnimal(Long id);
 
-    public List<AnimalEntity> getAnimalSons(Long id);
+    public List<SonsResponse> getAnimalSons(Long id);
 }
