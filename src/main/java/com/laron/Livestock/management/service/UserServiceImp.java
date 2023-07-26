@@ -10,6 +10,7 @@ import com.laron.Livestock.management.repo.UserRepository;
 import com.laron.Livestock.management.utils.AppError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class UserServiceImp implements  UserService{
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserEntity> getAllUsers() {
@@ -57,7 +59,7 @@ public class UserServiceImp implements  UserService{
                 .lastname(user.getLastname())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .password(user.getPassword())
+                .password( passwordEncoder.encode(user.getPassword()))
                 .role(savedRole)
                 .build();
 
