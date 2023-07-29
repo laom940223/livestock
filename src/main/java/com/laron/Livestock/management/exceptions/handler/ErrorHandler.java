@@ -2,6 +2,7 @@ package com.laron.Livestock.management.exceptions.handler;
 
 
 import com.laron.Livestock.management.exceptions.CustomFieldException;
+import com.laron.Livestock.management.exceptions.MyAccessDeniedException;
 import com.laron.Livestock.management.exceptions.ResourceNotFound;
 import com.laron.Livestock.management.utils.AppError;
 import com.laron.Livestock.management.utils.AppResponse;
@@ -65,6 +66,21 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 AppResponse.builder()
                         .errors(errors)
+                        .build()
+
+        );
+
+    }
+
+    @ExceptionHandler({MyAccessDeniedException.class})
+    public ResponseEntity<AppResponse<?>> accessDenied(MyAccessDeniedException ex ){
+
+
+
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                AppResponse.builder()
+                        .errors(List.of(new AppError("REQUESt", ex.getMessage())))
                         .build()
 
         );
