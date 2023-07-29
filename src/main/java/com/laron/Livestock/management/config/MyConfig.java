@@ -35,7 +35,7 @@ public class MyConfig {
                 .authorizeHttpRequests(auth->{
                             auth.requestMatchers("/hello").permitAll();
                             auth.requestMatchers("/api/auth/**").permitAll();
-                            auth.requestMatchers("/accessDenied").permitAll();
+
 
 //                            auth.requestMatchers("/api/users").hasRole("ADMIN");
                             auth.anyRequest().authenticated();

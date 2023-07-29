@@ -2,46 +2,54 @@ package com.laron.Livestock.management.controller;
 
 
 import com.laron.Livestock.management.dtos.LogInRequest;
-import com.laron.Livestock.management.exceptions.CustomFieldException;
-import com.laron.Livestock.management.exceptions.ResourceNotFound;
-import com.laron.Livestock.management.repo.UserRepository;
-import com.laron.Livestock.management.utils.AppError;
-import com.laron.Livestock.management.utils.JwtService;
+import com.laron.Livestock.management.dtos.RegisterUserRequest;
+import com.laron.Livestock.management.service.AuthService;
+import com.laron.Livestock.management.utils.AppResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/auth/login")
+@RequestMapping(path = "/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
 
+    private final AuthService authService;
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
-
-    @PostMapping
+    @PostMapping(path = "/login")
     public ResponseEntity<?> authenticate( @Valid @RequestBody LogInRequest user){
 
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            var eUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()-> new CustomFieldException("", new AppError("username", "The username was not found")));
+            return ResponseEntity.ok(
 
-            var token = jwtService.generateToken(eUser);
+                    AppResponse.builder()
+                            .data(authService.logIn(user))
+                            .build()
+            );
+    }
 
 
-            return ResponseEntity.ok( token );
+
+    @PostMapping(path="/register")
+    public ResponseEntity<AppResponse<?>> registration(@Valid @RequestBody RegisterUserRequest user){
+
+
+
+
+
+        return ResponseEntity.ok(
+                AppResponse.builder()
+                        .data(authService.register(user))
+                        .build()
+        );
+
+
+
 
 
     }
