@@ -23,9 +23,7 @@ public class AnimalController {
     @GetMapping
     public ResponseEntity<AppResponse<?>> getAllAnimals(){
 
-
         return ResponseEntity.ok(
-
                 AppResponse.builder()
                         .data(
                                 animalService.getAllAnimas()
@@ -38,9 +36,7 @@ public class AnimalController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<AppResponse<?>> getAnimalById(@PathVariable Long id){
-
         return ResponseEntity.ok(
-
                 AppResponse.builder()
                         .data(
                                 animalService.getAnimalById(id)
@@ -52,7 +48,6 @@ public class AnimalController {
 
     @PostMapping
     public ResponseEntity<AppResponse<?>> createAnimal(@Valid @RequestBody CreateAnimalRequest animal){
-
         return ResponseEntity.ok(
 
                 AppResponse.builder()
@@ -87,8 +82,17 @@ public class AnimalController {
                         .build()
 
         );
+    }
 
 
+    @GetMapping(path = "/farm/{id}")
+    public  ResponseEntity<AppResponse<?>> getFarmAnimals (@PathVariable Long id){
+
+        return ResponseEntity.ok(
+                AppResponse.builder()
+                        .data( animalService.getFarmAnimals(id))
+                        .build()
+        );
     }
 
 }

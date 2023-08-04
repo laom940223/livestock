@@ -28,8 +28,6 @@ public class CreateAnimalRequest {
     private String name;
 
 
-
-
     @JsonFormat( pattern = "yyyy-MM-dd")
     @NotBlank
     private String dob;
@@ -45,4 +43,8 @@ public class CreateAnimalRequest {
 
     private Long father_id;
     private Long mother_id;
+
+    @NotNull
+    private Long farm_id;
+
 }

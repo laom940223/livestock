@@ -1,6 +1,8 @@
 package com.laron.Livestock.management.config;
 
+import com.laron.Livestock.management.exceptions.MyAccessDeniedException;
 import com.laron.Livestock.management.utils.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,10 +34,10 @@ public class AuthenticationFilter  extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if (request.getServletPath().contains("/api/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        if (request.getServletPath().contains("/api/auth")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
 
         final String authHeader = request.getHeader("Authorization");
@@ -43,12 +45,15 @@ public class AuthenticationFilter  extends OncePerRequestFilter {
         final String username;
 
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+
+            System.out.println("mamaste");
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
         username = jwtService.extractUsername(jwt);
+
 
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -70,6 +75,8 @@ public class AuthenticationFilter  extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+
+
         filterChain.doFilter(request, response);
     }
 }

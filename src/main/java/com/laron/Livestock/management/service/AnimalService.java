@@ -14,6 +14,8 @@ public interface AnimalService {
     public AnimalEntity createAnimal(CreateAnimalRequest animal);
 
     public String  deleteAnimal(Long id);
-
     public List<SonsResponse> getAnimalSons(Long id);
+
+
+    public List<AnimalEntity> getFarmAnimals(Long id);
 }

@@ -1,5 +1,6 @@
 package com.laron.Livestock.management.dtos;
 
+import com.laron.Livestock.management.entities.EAnimalSex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class SonsResponse {
     private Long id;
 
     private String breed;
+    private EAnimalSex sex;
 
     private LocalDate dob;
 

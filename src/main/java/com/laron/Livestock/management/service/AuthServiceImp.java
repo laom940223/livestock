@@ -34,7 +34,7 @@ public class AuthServiceImp  implements  AuthService{
 
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        var eUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()-> new CustomFieldException("", new AppError("username", "The username was not found")));
+        var eUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()-> new CustomFieldException("", new AppError("username", "The username was not founds")));
         var token = jwtService.generateToken(eUser);
 
         return LogInResponse.builder()
@@ -69,7 +69,7 @@ public class AuthServiceImp  implements  AuthService{
 
         var toSave = UserEntity.builder()
                 .name(user.getName())
-                .username(user.getUsername())
+                .username(user.getUsername().replace(" ", ""))
                 .lastname(user.getLastname())
                 .email(user.getEmail())
                 .role(role)

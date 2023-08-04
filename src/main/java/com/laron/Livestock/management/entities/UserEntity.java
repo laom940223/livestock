@@ -8,8 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+
 import java.util.List;
 
 @Data
@@ -42,6 +43,10 @@ public class UserEntity implements UserDetails {
     private String email;
 
 
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private List<FarmEntity> farms;
+
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private RoleEntity role;
@@ -50,7 +55,7 @@ public class UserEntity implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ADMIN"));
+        return List.of(new SimpleGrantedAuthority(role.getName()));
     }
 
 

@@ -12,11 +12,14 @@ import java.util.Optional;
 public interface AnimalRepository extends CrudRepository<AnimalEntity, Long> {
 
 
-    @Query(value = "SELECT * FROM animals a WHERE a.father_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM animals a WHERE a.father_id = ?1 ", nativeQuery = true)
     public List<AnimalEntity> getFatherSons(Long id);
 
     @Query(value = "SELECT * FROM animals a  WHERE a.mother_id = ?1", nativeQuery = true)
     public List<AnimalEntity> getMotherSons(Long id);
 
+
+    @Query( value = "SELECT * FROM animals a WHERE a.farm_id = ?1", nativeQuery = true)
+    public List<AnimalEntity> getFarmAnimals(Long id);
 
 }

@@ -68,4 +68,10 @@ public class AnimalEntity {
     private BreedEntity breed;
 
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name ="farm_id", nullable = false)
+    private FarmEntity farm;
+
+
 }

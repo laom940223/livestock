@@ -8,7 +8,9 @@ import com.laron.Livestock.management.exceptions.CustomFieldException;
 import com.laron.Livestock.management.exceptions.ResourceNotFound;
 import com.laron.Livestock.management.repo.AnimalRepository;
 import com.laron.Livestock.management.repo.BreedRepository;
+import com.laron.Livestock.management.repo.FarmRepository;
 import com.laron.Livestock.management.utils.AppError;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,21 +19,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
 @Service
+@RequiredArgsConstructor
 public class AnimalServiceImp implements AnimalService{
 
 
     private final AnimalRepository animalRepo;
     private final BreedRepository breedRepo;
 
-    public AnimalServiceImp(AnimalRepository animalRepo, BreedRepository breedRepo) {
-        this.animalRepo = animalRepo;
-        this.breedRepo = breedRepo;
-    }
+    private final FarmRepository farmRepo;
+
+
 
     @Override
     public List<AnimalEntity> getAllAnimas() {
@@ -47,7 +50,10 @@ public class AnimalServiceImp implements AnimalService{
     @Override
     public AnimalEntity createAnimal(CreateAnimalRequest animal) {
 
+        var farm = farmRepo.findById(animal.getFarm_id())
+                .orElseThrow( ()-> new CustomFieldException("Error", new AppError("farm_id", "The farm you provide does not exist")));
 
+        System.out.println(farm.getAddress());
 
         var breed = breedRepo.findById(animal.getBreed_id())
                 .orElseThrow( ()-> new CustomFieldException("Error", new AppError("breed_id", "The breed you provide does not exist")));
@@ -63,8 +69,8 @@ public class AnimalServiceImp implements AnimalService{
         }
 
         if(Objects.nonNull( animal.getMother_id()) ){
-            mother = animalRepo.findById(animal.getFather_id())
-                    .orElseThrow(()-> new CustomFieldException("Error", new AppError("father_id", "The father you provide does not exist")));
+            mother = animalRepo.findById(animal.getMother_id())
+                    .orElseThrow(()-> new CustomFieldException("Error", new AppError("mother_id", "The mother you provide does not exist")));
             if(mother.getSex()  == EAnimalSex.MALE) throw new CustomFieldException("Error", new AppError("mother_id", "You can not add a bull as a mother"));
         }
 
@@ -75,6 +81,7 @@ public class AnimalServiceImp implements AnimalService{
                 .dob(LocalDate.parse(animal.getDob()))
                 .sex(EAnimalSex.valueOf(animal.getSex()))
                 .isInFarm(true)
+                .farm(farm)
                 .father(father)
                 .mother(mother)
                 .build();
@@ -109,6 +116,7 @@ public class AnimalServiceImp implements AnimalService{
                         son -> SonsResponse.builder()
                                 .id(son.getId())
                                 .name(son.getName())
+                                .sex(son.getSex())
                                 .breed(son.getBreed().getName())
                                 .inFarm(son.isInFarm())
                                 .dob(son.getDob())
@@ -129,7 +137,14 @@ public class AnimalServiceImp implements AnimalService{
                             .build()
 
             ).collect(Collectors.toList());
-
-
     }
+
+    @Override
+    public List<AnimalEntity> getFarmAnimals(Long id) {
+
+
+        return animalRepo.getFarmAnimals(id);
+    }
+
+
 }
