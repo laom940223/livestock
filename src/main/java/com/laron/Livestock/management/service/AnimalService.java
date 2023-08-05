@@ -18,4 +18,6 @@ public interface AnimalService {
 
 
     public List<AnimalEntity> getFarmAnimals(Long id);
+
+    public AnimalEntity updateAnimal(Long id, CreateAnimalRequest animal);
 }

@@ -23,6 +23,8 @@ import java.time.LocalDate;
 public class CreateAnimalRequest {
 
 
+    private Long id;
+
     @Size(min = 4, max = 60, message = "Provide a name between 4 and 60 characters")
     @NotBlank
     private String name;

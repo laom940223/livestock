@@ -11,6 +11,7 @@ import com.laron.Livestock.management.repo.BreedRepository;
 import com.laron.Livestock.management.repo.FarmRepository;
 import com.laron.Livestock.management.utils.AppError;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnimalServiceImp implements AnimalService{
 
 
@@ -144,6 +146,50 @@ public class AnimalServiceImp implements AnimalService{
 
 
         return animalRepo.getFarmAnimals(id);
+    }
+
+    @Override
+    public AnimalEntity updateAnimal(Long id, CreateAnimalRequest animal) {
+
+        var eAnimal = animalRepo.findById(id).orElseThrow(()-> new ResourceNotFound("The animal with id dos not exist"));
+
+//        var farm = farmRepo.findById(animal.getFarm_id())
+//                .orElseThrow( ()-> new CustomFieldException("Error", new AppError("farm_id", "The farm you provide does not exist")));
+
+
+
+        var breed = breedRepo.findById(animal.getBreed_id())
+                .orElseThrow( ()-> new CustomFieldException("Error", new AppError("breed_id", "The breed you provide does not exist")));
+
+
+        AnimalEntity father = null;
+        AnimalEntity mother = null;
+
+        if(Objects.nonNull( animal.getFather_id()) ){
+            father = animalRepo.findById(animal.getFather_id())
+                    .orElseThrow(()-> new CustomFieldException("Error", new AppError("father_id", "The father you provide does not exist")));
+            if(father.getSex()  == EAnimalSex.FEMALE) throw new CustomFieldException("Error", new AppError("father_id", "You can not add a cow as a father"));
+        }
+
+        if(Objects.nonNull( animal.getMother_id()) ){
+            mother = animalRepo.findById(animal.getMother_id())
+                    .orElseThrow(()-> new CustomFieldException("Error", new AppError("mother_id", "The mother you provide does not exist")));
+            if(mother.getSex()  == EAnimalSex.MALE) throw new CustomFieldException("Error", new AppError("mother_id", "You can not add a bull as a mother"));
+        }
+
+
+
+        eAnimal.setName(animal.getName());
+        eAnimal.setSex(EAnimalSex.valueOf(animal.getSex()));
+        eAnimal.setBreed(breed);
+        eAnimal.setDob(LocalDate.parse(animal.getDob()));
+        eAnimal.setFather(father);
+        eAnimal.setMother(mother);
+
+
+
+
+        return animalRepo.save(eAnimal);
     }
 
 

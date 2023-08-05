@@ -32,8 +32,8 @@ public class FarmEntity {
     private UserEntity owner;
 
 
-
-    @OneToMany(mappedBy = "farm",fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST})
+    @JsonIgnore
+    @OneToMany(mappedBy = "farm",fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST})
     private List<AnimalEntity> animals;
 
 }

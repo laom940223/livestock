@@ -72,6 +72,19 @@ public class AnimalController {
     }
 
 
+    @PutMapping(path= "/{id}")
+    public ResponseEntity<AppResponse<?>> updateAnimal( @PathVariable Long id, @RequestBody CreateAnimalRequest animalRequest){
+
+
+        return  ResponseEntity.ok(
+                AppResponse.builder()
+                        .data(animalService.updateAnimal(id, animalRequest))
+                        .build()
+        );
+    }
+
+
+
     @GetMapping(path = "/{id}/sons")
     public ResponseEntity<AppResponse<?>> getSons(@PathVariable Long id){
 
